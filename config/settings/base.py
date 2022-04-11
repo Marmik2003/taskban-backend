@@ -313,7 +313,6 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
         "knox.auth.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -323,17 +322,17 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # By Default swagger ui is available only to admin user(s). You can change permission classes to change that
 # See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Taskban Backend API",
-    "DESCRIPTION": "Documentation of API endpoints of Taskban Backend",
-    "VERSION": "1.0.0",
+    "TITLE": "Taskban API",
+    "DESCRIPTION": "Documentation of API endpoints of Taskban",
+    "VERSION": "1.0.1",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
     "SERVERS": [
+        {"url": "https://k-b.herokuapp.com", "description": "Production server"},
         {"url": "http://127.0.0.1:8000", "description": "Local Development server"},
-        {"url": "https://taskban.thedataboy.com", "description": "Production server"},
     ],
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
 REST_KNOX = {
-  'TOKEN_TTL': timedelta(days=31),
+  'TOKEN_TTL': timedelta(days=20),
 }
