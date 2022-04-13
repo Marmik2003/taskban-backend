@@ -73,6 +73,8 @@ class Task(SortableMixin, TimeStampedModel):
     assignees = models.ManyToManyField(User, related_name="tasks")
     column = SortableForeignKey(Column, related_name="tasks", on_delete=models.CASCADE)
     task_order = models.PositiveIntegerField(default=0, editable=False, db_index=True)
+    due_date = models.DateField(blank=True, null=True)
+    finished = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.id} - {self.title}"
