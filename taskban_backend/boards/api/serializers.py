@@ -21,7 +21,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ["id", "name", "owner"]
+        fields = ["id", "name", "description", "owner"]
 
 
 class TaskSerializer(serializers.ModelSerializer):

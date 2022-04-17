@@ -11,6 +11,7 @@ User = get_user_model()
 
 class Board(models.Model):
     name = models.CharField(max_length=50)
+    description = models.TextField(blank=True)
     owner = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="owned_boards"
     )
