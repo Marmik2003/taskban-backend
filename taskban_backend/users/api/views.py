@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model, login
 from knox.models import AuthToken
 from knox.views import LoginView as KnoxLoginView
-from rest_framework import generics, permissions, mixins, filters
+from rest_framework import generics, permissions, mixins, filters, status
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -76,6 +76,11 @@ class UserViewSet(
         user.avatar = avatar
         user.save()
         return Response(AvatarSerializer(instance=avatar).data)
+
+    @action(detail=False)
+    def me(self, request):
+        serializer = UserSerializer(request.user, context={"request": request})
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
 class UserSearchView(generics.ListAPIView):
