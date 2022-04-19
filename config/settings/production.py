@@ -143,3 +143,7 @@ LOGGING = {
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+CORS_ALLOWED_ORIGINS = [
+    "https://taskban.netlify.app",
+    "http://127.0.0.1:3000",
+]
