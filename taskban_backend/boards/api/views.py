@@ -280,13 +280,9 @@ class DashboardCount(APIView):
         total_tasks = tasks.order_by('due_date')
         incomplete_tasks = tasks.filter(finished=False)
         complete_tasks = tasks.filter(finished=True)
-        serialized_data = DashboardSerializer(
-            data={
-                'incomplete_tasks': incomplete_tasks,
-                'completed_tasks': complete_tasks,
-                'overdue_tasks': total_tasks.filter(due_date__lt=timezone.now()),
-            }
-        )
-        if serialized_data.is_valid():
-            return Response(serialized_data.data)
-        return Response(serialized_data.errors, status=HTTP_400_BAD_REQUEST)
+        serialized_data = DashboardSerializer({
+            'incomplete_tasks': incomplete_tasks,
+            'completed_tasks': complete_tasks,
+            'overdue_tasks': total_tasks.filter(due_date__lt=timezone.now()),
+        })
+        return Response(serialized_data.data)
