@@ -127,3 +127,15 @@ class BoardDetailSerializer(serializers.ModelSerializer):
 
 class MemberSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
+
+
+class DashboardTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ["id", "title", "priority", "labels", "assignees", "due_date"]
+
+
+class DashboardSerializer(serializers.Serializer):
+    incomplete_tasks = DashboardTaskSerializer(many=True, read_only=True)
+    completed_tasks = DashboardTaskSerializer(many=True, read_only=True)
+    overdue_tasks = DashboardTaskSerializer(many=True, read_only=True)

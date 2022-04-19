@@ -6,6 +6,8 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from taskban_backend.boards.api.views import DashboardCount
+
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
@@ -20,7 +22,7 @@ urlpatterns = [
 
 # API URLS
 urlpatterns += [
-    # DRF auth token
+    path("api/dashboard/", DashboardCount.as_view(), name="dashboard-count"),
     path("api/boards/", include("taskban_backend.boards.urls", namespace="boards")),
     path("api/users/", include("taskban_backend.users.urls", namespace="users")),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),

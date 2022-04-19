@@ -2,6 +2,7 @@ from itertools import chain
 
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
@@ -23,7 +24,7 @@ from .serializers import (
     MemberSerializer,
     BoardMemberSerializer,
     LabelSerializer,
-    CommentSerializer,
+    CommentSerializer, DashboardSerializer,
 )
 from taskban_backend.boards.viewsets import ModelDetailViewSet
 
@@ -61,8 +62,8 @@ class BoardViewSet(
                     Task.objects.filter(
                         Q(assignees__in=[int(x) for x in assignees.split(",")])
                     )
-                    .order_by("id")
-                    .distinct("id")
+                        .order_by("id")
+                        .distinct("id")
                 )
             return qs.prefetch_related(Prefetch("columns__tasks", queryset=queryset))
         return qs
@@ -135,8 +136,8 @@ class CommentViewSet(
     def get_queryset(self):
         return (
             super()
-            .get_queryset()
-            .filter(task__column__board__members=self.request.user)
+                .get_queryset()
+                .filter(task__column__board__members=self.request.user)
         )
 
     def create(self, request, *args, **kwargs):
@@ -145,8 +146,8 @@ class CommentViewSet(
         if (
             self.request.user
             not in Task.objects.get(
-                id=request.data.get("task")
-            ).column.board.members.all()
+            id=request.data.get("task")
+        ).column.board.members.all()
         ):
             return Response(status=HTTP_400_BAD_REQUEST)
 
@@ -266,3 +267,26 @@ def sort_model(request, Model):
         start_index += step
 
     return Response(status=HTTP_200_OK)
+
+
+class DashboardCount(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, **kwargs):
+        user = request.user
+        tasks = Task.objects.filter(
+            assignees=user,
+        )
+        total_tasks = tasks.order_by('due_date')
+        incomplete_tasks = tasks.filter(finished=False)
+        complete_tasks = tasks.filter(finished=True)
+        serialized_data = DashboardSerializer(
+            data={
+                'incomplete_tasks': incomplete_tasks,
+                'completed_tasks': complete_tasks,
+                'overdue_tasks': total_tasks.filter(due_date__lt=timezone.now()),
+            }
+        )
+        if serialized_data.is_valid():
+            return Response(serialized_data.data)
+        return Response(serialized_data.errors, status=HTTP_400_BAD_REQUEST)

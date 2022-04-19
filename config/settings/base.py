@@ -310,7 +310,7 @@ SOCIALACCOUNT_FORMS = {"signup": "taskban_backend.users.forms.UserSocialSignupFo
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.TokenAuthentication",
         "knox.auth.TokenAuthentication",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
