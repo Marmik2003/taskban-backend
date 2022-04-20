@@ -278,7 +278,7 @@ class DashboardCount(APIView):
             assignees=user,
         )
         total_tasks = tasks.order_by('due_date')
-        incomplete_tasks = tasks.filter(finished=False)
+        incomplete_tasks = tasks.filter(finished=False, due_date__gte=timezone.now())
         complete_tasks = tasks.filter(finished=True)
         serialized_data = DashboardSerializer({
             'incomplete_tasks': incomplete_tasks,
