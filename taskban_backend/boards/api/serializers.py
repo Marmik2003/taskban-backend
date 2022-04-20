@@ -18,7 +18,7 @@ class BoardModelSerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
-    members = serializers.ManyRelatedField(read_only=True)
+    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Board
