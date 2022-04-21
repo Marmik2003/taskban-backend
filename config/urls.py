@@ -23,7 +23,7 @@ urlpatterns = [
 # API URLS
 urlpatterns += [
     path("api/dashboard/", DashboardCount.as_view(), name="dashboard-count"),
-    path("api/boards/", include("taskban_backend.boards.urls", namespace="boards")),
+    path("api/", include("taskban_backend.boards.urls", namespace="boards")),
     path("api/users/", include("taskban_backend.users.urls", namespace="users")),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(

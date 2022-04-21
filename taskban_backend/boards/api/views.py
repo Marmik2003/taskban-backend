@@ -110,7 +110,7 @@ class BoardViewSet(
         return Response(data=BoardMemberSerializer(instance=member).data)
 
 
-class TaskViewSet(ModelViewSet):
+class TaskViewSet(ModelDetailViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
@@ -162,7 +162,7 @@ class CommentViewSet(
         return super().destroy(request, *args, **kwargs)
 
 
-class ColumnViewSet(ModelViewSet):
+class ColumnViewSet(ModelDetailViewSet):
     queryset = Column.objects.all()
     serializer_class = ColumnSerializer
     permission_classes = [IsAuthenticated]
@@ -172,7 +172,7 @@ class ColumnViewSet(ModelViewSet):
         return super().get_queryset().filter(board__members=user)
 
 
-class LabelViewSet(ModelViewSet):
+class LabelViewSet(ModelDetailViewSet):
     queryset = Label.objects.all()
     serializer_class = LabelSerializer
     permission_classes = [IsAuthenticated]
