@@ -6,24 +6,26 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from taskban_backend.boards.api.views import DashboardCount
+from taskban_backend.boards.api.views import DashboardCount, SortColumn, SortTask
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
-    path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
-    ),
-    # Django Admin, use {% url 'admin:index' %}
-    path(settings.ADMIN_URL, admin.site.urls),
-    # User management
-    path("accounts/", include("allauth.urls")),
-    # Your stuff: custom urls includes go here
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+                  path(
+                      "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+                  ),
+                  # Django Admin, use {% url 'admin:index' %}
+                  path(settings.ADMIN_URL, admin.site.urls),
+                  # User management
+                  path("accounts/", include("allauth.urls")),
+                  # Your stuff: custom urls includes go here
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
 urlpatterns += [
     path("api/dashboard/", DashboardCount.as_view(), name="dashboard-count"),
     path("api/", include("taskban_backend.boards.urls", namespace="boards")),
+    path("api/sort/column/", SortColumn.as_view(), name="sort-column"),
+    path("api/sort/task/", SortTask.as_view(), name="sort-task"),
     path("api/users/", include("taskban_backend.users.urls", namespace="users")),
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
