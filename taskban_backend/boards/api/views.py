@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from django.db.models import Q
 from django.db.models import Prefetch
 
@@ -110,7 +110,7 @@ class BoardViewSet(
         return Response(data=BoardMemberSerializer(instance=member).data)
 
 
-class TaskViewSet(ModelDetailViewSet):
+class TaskViewSet(ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
@@ -162,7 +162,7 @@ class CommentViewSet(
         return super().destroy(request, *args, **kwargs)
 
 
-class ColumnViewSet(ModelDetailViewSet):
+class ColumnViewSet(ModelViewSet):
     queryset = Column.objects.all()
     serializer_class = ColumnSerializer
     permission_classes = [IsAuthenticated]
@@ -172,7 +172,7 @@ class ColumnViewSet(ModelDetailViewSet):
         return super().get_queryset().filter(board__members=user)
 
 
-class LabelViewSet(ModelDetailViewSet):
+class LabelViewSet(ModelViewSet):
     queryset = Label.objects.all()
     serializer_class = LabelSerializer
     permission_classes = [IsAuthenticated]
