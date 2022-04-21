@@ -117,7 +117,7 @@ class LabelSerializer(BoardModelSerializer):
 class BoardDetailSerializer(serializers.ModelSerializer):
     owner = serializers.PrimaryKeyRelatedField(read_only=True)
     columns = ColumnSerializer(many=True, read_only=True)
-    members = BoardMemberSerializer(many=True, read_only=True)
+    members = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     labels = LabelSerializer(many=True, read_only=True)
 
     class Meta:
