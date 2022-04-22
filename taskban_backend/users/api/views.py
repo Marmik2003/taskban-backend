@@ -18,7 +18,6 @@ User = get_user_model()
 
 
 class ExcludeBoardMembersFilter(filters.BaseFilterBackend):
-
     result_limit = 8
     filter_param = "board"
 
@@ -82,6 +81,11 @@ class UserViewSet(
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+    @action(detail=False, methods=['get'], url_path='get_by_username/(?P<username>\w+)')
+    def get_by_username(self, request, username):
+        user = generics.get_object_or_404(User, username=username)
+        return Response(UserSearchSerializer(user).data, status=status.HTTP_200_OK)
+
 
 class UserSearchView(generics.ListAPIView):
     queryset = User.objects.filter(is_active=True).all()
@@ -100,4 +104,3 @@ class UserSearchView(generics.ListAPIView):
             return Response([])
 
         return super().get(request, *args, **kwargs)
-
