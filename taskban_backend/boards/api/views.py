@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from rest_framework.views import APIView
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 from django.db.models import Q
 from django.db.models import Prefetch
 
@@ -60,7 +60,8 @@ class BoardViewSet(
             if assignees:
                 queryset = (
                     Task.objects.filter(
-                        Q(assignees__in=[int(x) for x in assignees.split(",")])
+                        Q(assignees__in=[int(x) for x in assignees.split(",")]),
+                        archived=False,
                     )
                         .order_by("id")
                         .distinct("id")
@@ -105,19 +106,26 @@ class BoardViewSet(
             return Response(status=HTTP_400_BAD_REQUEST)
 
         board.members.remove(member)
-        for task in Task.objects.filter(column__board=board):
+        for task in Task.objects.filter(column__board=board, archived=False):
             task.assignees.remove(member)
         return Response(data=BoardMemberSerializer(instance=member).data)
 
 
 class TaskViewSet(ModelDetailViewSet):
-    queryset = Task.objects.all()
+    queryset = Task.objects.filter(archived=False)
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         return super().get_queryset().filter(column__board__members=user)
+
+    @action(detail=True, methods=["DELETE"], serializer_class=TaskSerializer)
+    def archive(self, request, pk):
+        task = self.get_object()
+        task.archived = True
+        task.save()
+        return Response(data=TaskSerializer(instance=task).data)
 
 
 class CommentViewSet(
@@ -146,7 +154,8 @@ class CommentViewSet(
         if (
             self.request.user
             not in Task.objects.get(
-            id=request.data.get("task")
+            id=request.data.get("task"),
+            archived=False,
         ).column.board.members.all()
         ):
             return Response(status=HTTP_400_BAD_REQUEST)
@@ -207,7 +216,7 @@ class SortTask(APIView):
         board_id = request.data.get("board")
         board = Board.objects.get(id=board_id)
         pre_columns = Column.objects.filter(board=board)
-        pre_tasks = Task.objects.filter(column__in=pre_columns).prefetch_related(
+        pre_tasks = Task.objects.filter(column__in=pre_columns, archived=False).prefetch_related(
             "columns"
         )
 
