@@ -128,23 +128,18 @@ LOGGING = {
     },
     "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
-        "django.request": {
-            "handlers": ["mail_admins"],
-            "level": "ERROR",
-            "propagate": True,
-        },
-        "django.security.DisallowedHost": {
-            "level": "ERROR",
-            "handlers": ["console"],
-            "propagate": True,
-        },
     },
 }
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGIN_REGEXES = [
     "https://taskban.netlify.app",
+    "https://taskban-\w+\.netlify.app",
+    "https://taskban-\w+\-\w+\.netlify.app",
+    "https://taskban.vercel.app",
+    "https://taskban-\w+\.vercel.app",
+    "https://taskban-\w+\-\w+\.vercel.app",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
 ]
