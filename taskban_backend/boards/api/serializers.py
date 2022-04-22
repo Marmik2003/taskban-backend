@@ -82,6 +82,7 @@ class TaskSerializer(serializers.ModelSerializer):
             "column",
             "due_date",
             "finished",
+            "archived",
         ]
 
 
