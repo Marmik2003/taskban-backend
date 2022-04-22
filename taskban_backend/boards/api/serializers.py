@@ -132,7 +132,7 @@ class MemberSerializer(serializers.Serializer):
 class DashboardTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ["id", "title", "priority", "labels", "assignees", "due_date"]
+        fields = ["id", "title", "priority", "labels", "assignees", "due_date", "finished"]
 
 
 class DashboardSerializer(serializers.Serializer):
