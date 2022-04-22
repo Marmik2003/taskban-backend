@@ -60,7 +60,7 @@ class UserViewSet(
 ):
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    permission_classes = [permissions.IsAuthenticated, IsSelf]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == "retrieve" or self.action == "update":
