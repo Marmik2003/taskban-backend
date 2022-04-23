@@ -118,7 +118,7 @@ class TaskViewSet(ModelDetailViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return super().get_queryset().filter(column__board__members=user)
+        return super().get_queryset().filter(column__board__members=user, archived=False)
 
     @action(detail=True, methods=["DELETE"], serializer_class=TaskSerializer)
     def archive(self, request, pk):

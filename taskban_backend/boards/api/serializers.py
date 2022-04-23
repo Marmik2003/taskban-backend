@@ -3,7 +3,6 @@ from django.db import IntegrityError
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
-from taskban_backend.users.api.serializers import BoardMemberSerializer
 from taskban_backend.boards.models import Board, Task, Column, Label, Comment
 
 User = get_user_model()
