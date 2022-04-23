@@ -296,6 +296,7 @@ class DashboardCount(APIView):
         user = request.user
         tasks = Task.objects.filter(
             assignees=user,
+            archived=False,
         )
         total_tasks = tasks.order_by('due_date')
         incomplete_tasks = tasks.filter(finished=False, due_date__gte=timezone.now())
