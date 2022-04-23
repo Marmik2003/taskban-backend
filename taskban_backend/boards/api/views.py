@@ -53,10 +53,10 @@ class BoardViewSet(
 
     def get_queryset(self):
         user = self.request.user
-        qs = super().get_queryset().filter(members=user)
+        qs = super().get_queryset().filter(members=user, columns__tasks__archived=False)
         assignees = self.request.query_params.get("assignees", None)
         if self.action == "retrieve":
-            queryset = Task.objects.filter(board=self.get_object(), archived=False)
+            queryset = None
             if assignees:
                 queryset = (
                     Task.objects.filter(
