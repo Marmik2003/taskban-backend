@@ -8,7 +8,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK, HTTP_405_METHOD_NOT_ALLOWED
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 from django.db.models import Q
@@ -126,6 +126,9 @@ class TaskViewSet(ModelDetailViewSet):
         task.archived = True
         task.save()
         return Response(data=TaskSerializer(instance=task).data)
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class CommentViewSet(
