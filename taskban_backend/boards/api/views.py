@@ -53,7 +53,7 @@ class BoardViewSet(
 
     def get_queryset(self):
         user = self.request.user
-        qs = super().get_queryset().filter(members=user, columns__tasks__archived=False)
+        qs = super().get_queryset().filter(members=user)
         assignees = self.request.query_params.get("assignees", None)
         if self.action == "retrieve":
             queryset = None
@@ -62,6 +62,14 @@ class BoardViewSet(
                     Task.objects.filter(
                         Q(assignees__in=[int(x) for x in assignees.split(",")]),
                         archived=False,
+                    )
+                        .order_by("id")
+                        .distinct("id")
+                )
+            else:
+                queryset = (
+                    Task.objects.filter(
+                        archived=False
                     )
                         .order_by("id")
                         .distinct("id")
